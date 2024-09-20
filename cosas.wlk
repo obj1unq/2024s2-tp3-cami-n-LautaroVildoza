@@ -1,33 +1,54 @@
 object knightRider {
+	const property bultos = 1
 	method peso() { return 500 }
 	method nivelPeligrosidad() { return 10 }
+	method consecuencia() {// no hace nada
+	}
 }
 
 object bumblebee {
-	var property transformacion = camion
-  method peso() { return 800 transformacion.nivelPeligrosidad()}
-  method nivelPeligrosidad() {return }
-}
-object auto {
-  method nivelPeligrosidad() { return 15 }
+	const property bultos = 2
+	var property transformacion = auto
+  method peso() { return 800}
+  method nivelPeligrosidad() {return transformacion.nivelPeligrosidad()}
+  method consecuencia() {transformacion = robot}
 }
 
-object robot {
-  method nivelPeligrosidad() { return 30 }
-}
 object paqueteDeLadrillos{
-  var property cantidad = 0
-	method peso() {return 2*cantidad}
+	var property bultos = 0
+
+  var property ladrillos = 0
+	method peso() {return 2*ladrillos}
+
 	method nivelPeligrosidad() {return 2}
+
+	method bultos() {
+	  if (ladrillos <= 100){
+			bultos = 1
+			return bultos
+	  }
+	  else if (ladrillos <= 300){
+			bultos = 2
+			 return bultos
+	  }
+		else{	bultos = 3
+	  		 	return bultos
+		}
+	}
+
+	method consecuencia() { ladrillos += 12}
 }
 
 object arenaAGranel {
-  var property peso = 0
+	const property bultos = 1
+  	var property peso = 0
 	method nivelPeligrosidad() { return 1}
+	method consecuencia() { peso += 20}
 }
 
 object bateriaAntiaerea {
-	var estaConMisiles = false
+	var property bultos = 0
+	var property estaConMisiles = false
   method peso() {
 	if (estaConMisiles){
 		return 300
@@ -45,9 +66,20 @@ object bateriaAntiaerea {
 	}
 	return 0
   }
+  method bultos() {
+	if (estaConMisiles){
+		 bultos = 2
+		 return bultos
+	}
+	  bultos =  1
+	  return bultos
+  }
+  method consecuencia() { estaConMisiles = true}
+
 }
 
 object contenedorPortuario {
+	const property bultos = 1
   const cosas = #{}
 
   method peso() {
@@ -60,16 +92,28 @@ object contenedorPortuario {
 	}
 	return cosas.max({ cosa => cosa.nivelPeligrosidad()}).nivelPeligrosidad()
   }
+
+	method agregar(cosa) {
+	  cosas.add(cosa)
+	}
+  method bultos() {
+	return cosas.sum({cosa => cosa.bultos()}) + bultos
+  }
+  
+  method consecuencia() {cosas.forEach({cosa => cosa.consecuencia()})}
 }
 
 object residuosRadioactivos {
+	const property bultos = 1
 	var property peso = 0
 
 	method nivelPeligrosidad() {return 200}
+	method consecuencia() { peso += 15}
 }
 
 object embalajeDeSeguridad {
-  const envoltura = #{}
+	const property bultos = 2
+  	const envoltura = #{}
 
   method peso() {
 	return envoltura.sum({ cosa => cosa.peso()})
@@ -78,5 +122,15 @@ object embalajeDeSeguridad {
   method nivelPeligrosidad() {
 	return envoltura.sum({cosa => cosa.nivelPeligrosidad()}) / 2
   }
+  method consecuencia() { //no hace nada
+  }
 }
 
+//Transformaciones
+object auto {
+  method nivelPeligrosidad() { return 15 }
+}
+
+object robot {
+  method nivelPeligrosidad() { return 30 }
+}

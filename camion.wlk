@@ -2,9 +2,10 @@ import cosas.*
 
 object camion {
 	const property cosas = #{}
-		
+	
 	method cargar(unaCosa) {
 		cosas.add(unaCosa)
+		unaCosa.consecuencia()
 	}
 
 	method descargar(cosa) {
@@ -12,14 +13,14 @@ object camion {
 	}
 
 	method todoPesoPar() {
-	  cosas.all({cosa => cosa.peso().even() })
+	  return cosas.all({cosa => cosa.peso().even() })
 	}
 
 	method hayAlgunoQuePesa(peso) {
-	  cosas.any({cosa => cosa.peso() == peso})
+	  return cosas.any({cosa => cosa.peso() == peso})
 	}
 	method elDeNivel(nivel) {
-	  cosas.find({cosa => cosa.nivelPeligrosidad() == nivel})
+	  return cosas.find({cosa => cosa.nivelPeligrosidad() == nivel})
 	}
 	method pesoTotal() {
 	  return cosas.sum({cosa => cosa.peso()}) + 1000
@@ -28,31 +29,32 @@ object camion {
 	  return self.pesoTotal() > 2500
 	}
 	method objetosQueSuperanPeligrosidad(nivel) {
-	  cosas.filter({cosa => cosa.nivelPeligrosidad() == nivel})
+	  return cosas.filter({cosa => cosa.nivelPeligrosidad() >= nivel})
 	}
 	method objetosMasPeligrososQue(cosa) {
-	  cosas.filter({unaCosa => unaCosa.nivelPeligrosidad() > cosa.nivelPeligrosidad()})
+	  return cosas.filter({unaCosa => unaCosa.nivelPeligrosidad() > cosa.nivelPeligrosidad()})
 	}
 	method puedeCircularEnRuta(nivelMaximoPeligrosidad) {
-		 self.excedidoDePeso() and self.cosasNoSuperanElnivelDePeligrosidad(nivelMaximoPeligrosidad)
+		 return not self.excedidoDePeso() and self.cosasNoSuperanElnivelDePeligrosidad(nivelMaximoPeligrosidad)
 	}
 	method cosasNoSuperanElnivelDePeligrosidad(nivelMaximoPeligrosidad) {
 	  return cosas.all({cosa => cosa.nivelPeligrosidad() <= nivelMaximoPeligrosidad}) 
 	}
 
 	method tieneAlgoQuePesaEntre(min, max) {
-	  cosas.any(min < {cosa => cosa.peso()} > max)
+	  return  cosas.any({cosa => cosa.peso() <= max and cosa.peso() >= min})
 	}
 
 	method cosaMasPesada() {
-	  cosas.max({cosa => cosa.peso()})
+	  return cosas.max({cosa => cosa.peso()})
 	}
 
 	method pesos() {
-	  cosas.all({cosa => cosa.precio()}).asList()
+	  return cosas.map(({cosa => cosa.peso()}))
 	}
 
 	method totalBultos() {
-	  return 
+		return cosas.sum({cosa => cosa.bultos()})
 	}
+
 }

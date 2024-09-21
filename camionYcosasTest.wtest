@@ -1,3 +1,5 @@
+import destinos.*
+import almacen.*
 import cosas.*
 import camion.*
 
@@ -173,3 +175,23 @@ describe "Consecuencias de la carga" {
 
 }
 
+describe "Transporte" {
+  test "No Llega Al Alamcen" {
+    camion.cargar(knightRider)
+    camion.cargar(bumblebee)
+    almacen.agregar(arenaAGranel)
+    
+    assert.throwsException({camion.transportar(almacen, ruta9)})
+   
+  }
+
+  test "Llega Al Almacen" {
+    camion.cargar(knightRider)
+    almacen.agregar(arenaAGranel)
+    caminosVecinales.pesoMaximo(89000)
+    camion.transportar(almacen, caminosVecinales)
+
+    assert.equals(#{knightRider, arenaAGranel}, almacen.cosas())
+    assert.equals(#{}, camion.cosas())
+  }
+}

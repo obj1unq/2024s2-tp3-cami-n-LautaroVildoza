@@ -1,7 +1,11 @@
 import cosas.*
+import almacen.*
+import destinos.*
+
 
 object camion {
 	const property cosas = #{}
+	var property ruta = ruta9
 	
 	method cargar(unaCosa) {
 		cosas.add(unaCosa)
@@ -35,7 +39,7 @@ object camion {
 	  return cosas.filter({unaCosa => unaCosa.nivelPeligrosidad() > cosa.nivelPeligrosidad()})
 	}
 	method puedeCircularEnRuta(nivelMaximoPeligrosidad) {
-		 return not self.excedidoDePeso() and self.cosasNoSuperanElnivelDePeligrosidad(nivelMaximoPeligrosidad)
+		 return not self.excedidoDePeso() and self.cosasNoSuperanElnivelDePeligrosidad(nivelMaximoPeligrosidad) and ruta.nivelPeligrosidad() <= nivelMaximoPeligrosidad
 	}
 	method cosasNoSuperanElnivelDePeligrosidad(nivelMaximoPeligrosidad) {
 	  return cosas.all({cosa => cosa.nivelPeligrosidad() <= nivelMaximoPeligrosidad}) 
@@ -57,4 +61,23 @@ object camion {
 		return cosas.sum({cosa => cosa.bultos()})
 	}
 
+	method transportar(destino, camino) {
+		self.validarTransporte(destino, camino)
+	  	destino.dejar(cosas)
+		cosas.clear()
+	}
+
+	method validarTransporte(destino, camino){
+		if( not self.excedidoDePeso() and not self.condicionDeDestino(destino) and not self.condicionDeCamino(camino)){
+			self.error("No se puede realizar el transporte")
+	  }
+	}
+
+	method condicionDeDestino(destino) { 
+	  	return self.totalBultos() + destino.totalBultos() <= destino.maximoBultos()
+	}
+
+	method condicionDeCamino(camino) {
+		return self.puedeCircularEnRuta(camino.nivelPeligrosidad()) or self.pesoTotal() < camino.pesoMaximo()
+	}
 }

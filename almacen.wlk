@@ -11,7 +11,9 @@ object almacen {
   method agregar(cosa) {
     cosas.add(cosa)
   }
-
+  method condicionDeDestino(vehiculo) {
+    return  vehiculo.totalBultos() + self.totalBultos() <= self.maximoBultos()
+  }
   method totalBultos() {
 		return cosas.sum({cosa => cosa.bultos()}) 
 	}

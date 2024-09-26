@@ -82,6 +82,13 @@ describe "El camnion" {
     assert.equals(false, camion.excedidoDePeso())
     assert.equals(true, camion.puedeCircularEnRuta(15))
   }
+
+  test "tiene Algo que pesa entre" {
+    camion.cargar(knightRider)
+    camion.cargar(bumblebee)
+
+    assert.equals(false, camion.tieneAlgoQuePesaEntre(10, 20))
+  }
 }
 
 describe "Agregados Del Camion" {

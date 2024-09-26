@@ -46,7 +46,7 @@ object camion {
 	}
 
 	method tieneAlgoQuePesaEntre(min, max) {
-	  return  cosas.any({cosa => cosa.peso() <= max and cosa.peso() >= min})
+	  return  cosas.any({cosa => cosa.peso().between(min, max)})
 	}
 
 	method cosaMasPesada() {
@@ -68,16 +68,16 @@ object camion {
 	}
 
 	method validarTransporte(destino, camino){
-		if( not self.excedidoDePeso() and not self.condicionDeDestino(destino) and not self.condicionDeCamino(camino)){
+		if( not self.excedidoDePeso() and not destino.condicionDeDestino(self) and not self.condicionDeCamino(camino)){
 			self.error("No se puede realizar el transporte")
 	  }
 	}
 
-	method condicionDeDestino(destino) { 
-	  	return self.totalBultos() + destino.totalBultos() <= destino.maximoBultos()
+	method condicionDeCamino(camino) {
+		return self.puedeCircularEnRuta(camino.nivelPeligrosidad()) or self.pesoDelCamionNoSuperaAlDe(camino)
 	}
 
-	method condicionDeCamino(camino) {
-		return self.puedeCircularEnRuta(camino.nivelPeligrosidad()) or self.pesoTotal() < camino.pesoMaximo()
+	method pesoDelCamionNoSuperaAlDe(camino) {
+	  return self.pesoTotal() < camino.pesoMaximo()
 	}
 }

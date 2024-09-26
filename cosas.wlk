@@ -15,25 +15,13 @@ object bumblebee {
 }
 
 object paqueteDeLadrillos{
-	var property bultos = 0
-
-  var property ladrillos = 0
+  	var property ladrillos = 0
 	method peso() {return 2*ladrillos}
 
 	method nivelPeligrosidad() {return 2}
 
 	method bultos() {
-	  if (ladrillos <= 100){
-			bultos = 1
-			return bultos
-	  }
-	  else if (ladrillos <= 300){
-			bultos = 2
-			 return bultos
-	  }
-		else{	bultos = 3
-	  		 	return bultos
-		}
+		return if(ladrillos <= 100) 1 else if (ladrillos <= 300)  2 else  3
 	}
 
 	method consecuencia() { ladrillos += 12}
@@ -56,25 +44,23 @@ object bateriaAntiaerea {
 	return 200
   }
 
-  method estaConMisiles(bool) {
+  method cambiarMisilesA(bool) {
 	estaConMisiles = bool
   }
 
   method nivelPeligrosidad() {
-	if (estaConMisiles){
-		return 100
+	return if (estaConMisiles){
+		 100
 	}
-	return 0
+	else 0
   }
   method bultos() {
-	if (estaConMisiles){
-		 bultos = 2
-		 return bultos
+	return if (estaConMisiles){
+		  2
 	}
-	  bultos =  1
-	  return bultos
+	  else 1
   }
-  method consecuencia() { estaConMisiles = true}
+  method consecuencia() { self.cambiarMisilesA(true)}
 
 }
 
@@ -113,7 +99,7 @@ object residuosRadioactivos {
 
 object embalajeDeSeguridad {
 	const property bultos = 2
-  	const envoltura = #{}
+  	const envoltura = []
 
   method peso() {
 	return envoltura.sum({ cosa => cosa.peso()})
